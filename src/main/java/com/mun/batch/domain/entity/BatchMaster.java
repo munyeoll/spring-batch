@@ -17,11 +17,19 @@ public class BatchMaster {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 150)
-    private String name;
+    @Column(nullable = false, unique = true)
+    private String batchNo;
+
+    @Column(nullable = false)
+    private String batchName;
+
+    @Column(nullable = false)
+    private LocalDateTime registDate;
 
     @Builder
-    public BatchMaster(String name) {
-        this.name = name;
+    public BatchMaster(String batchNo, String batchName, LocalDateTime registDate) {
+        this.batchNo = batchNo;
+        this.batchName = batchName;
+        this.registDate = registDate;
     }
 }
