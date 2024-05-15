@@ -1,10 +1,49 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>배치목록</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
 </head>
 <body>
-    <h1>Index</h1>
+    <h1>배치목록</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>번호</th>
+                <th>배치번호</th>
+                <th>배치명</th>
+                <th>등록일</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- 예시 데이터, 서버에서 데이터를 받아와서 동적으로 생성해야 함 -->
+            <tr>
+                <td>1</td>
+                <td>항목1</td>
+                <td>항목1에 대한 설명</td>
+                <td>2023-01-01</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>항목2</td>
+                <td>항목2에 대한 설명</td>
+                <td>2023-01-02</td>
+            </tr>
+        </tbody>
+    </table>
 </body>
 </html>
