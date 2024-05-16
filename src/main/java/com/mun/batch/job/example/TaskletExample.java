@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
 @Slf4j
-@Configuration
+// @Configuration
 public class TaskletExample {
 
     @Bean
