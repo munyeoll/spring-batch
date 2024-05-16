@@ -1,9 +1,16 @@
 package com.mun.batch.domain.entity;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
 class BatchMasterTest {
+
+    @Autowired
+    private BatchMasterRepository batchMasterRepository;
 
     @Test
     void testBatchMasterCreation() {
@@ -17,9 +24,14 @@ class BatchMasterTest {
                                              .cronString(cronString)
                                              .build();
 
-        assertNotNull(batchMaster);
-        assertEquals(batchNo, batchMaster.getBatchNo());
-        assertEquals(batchName, batchMaster.getBatchName());
-        assertEquals(cronString, batchMaster.getCronString());
+        batchMasterRepository.save(batchMaster);
+
+        BatchMaster saveBatchMaster = batchMasterRepository.findById(batchMaster.getId())
+                                        .orElseThrow(() -> new RuntimeException("BatchMaster not found"));
+
+        assertNotNull(saveBatchMaster);
+        assertEquals(batchNo, saveBatchMaster.getBatchNo());
+        assertEquals(batchName, saveBatchMaster.getBatchName());
+        assertEquals(cronString, saveBatchMaster.getCronString());
     }
 }
