@@ -17,19 +17,27 @@ public class BatchMaster {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, length = 100, unique = true)
     private String batchNo;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String batchName;
 
+    @Column(nullable = false, length = 100)
+    private String cronString;
+
     @Column(nullable = false)
-    private LocalDateTime registDate;
+    private LocalDateTime createdDate;
+
+    @Column(nullable = false)
+    private LocalDateTime modifiedDate;
 
     @Builder
-    public BatchMaster(String batchNo, String batchName, LocalDateTime registDate) {
+    public BatchMaster(String batchNo, String batchName, String cronString) {
         this.batchNo = batchNo;
         this.batchName = batchName;
-        this.registDate = registDate;
+        this.cronString = cronString;
+        this.createdDate = LocalDateTime.now();
+        this.modifiedDate = LocalDateTime.now();
     }
 }
