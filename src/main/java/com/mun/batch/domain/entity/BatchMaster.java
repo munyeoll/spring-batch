@@ -34,6 +34,9 @@ public class BatchMaster {
     @Column(nullable = false, length = 100)
     private String cronString;
 
+    @Column(nullable = false, length = 500)
+    private String jobClassPath;
+
     @Column(nullable = false)
     private LocalDateTime createdDate;
 
