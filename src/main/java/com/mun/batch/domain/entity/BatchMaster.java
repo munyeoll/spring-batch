@@ -35,7 +35,7 @@ public class BatchMaster {
     private String cronString;
 
     @Column(nullable = false, length = 500)
-    private String jobClassPath;
+    private String jobBeanName;
 
     @Column(nullable = false)
     private LocalDateTime createdDate;
@@ -47,10 +47,11 @@ public class BatchMaster {
     private List<BatchLog> batchLogs;
 
     @Builder
-    public BatchMaster(String batchNo, String batchName, String cronString) {
+    public BatchMaster(String batchNo, String batchName, String cronString, String jobBeanName) {
         this.batchNo = batchNo;
         this.batchName = batchName;
         this.cronString = cronString;
+        this.jobBeanName = jobBeanName;
         this.createdDate = LocalDateTime.now();
         this.modifiedDate = LocalDateTime.now();
     }

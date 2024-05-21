@@ -21,14 +21,14 @@ public class BatchTestJob01 {
     private final JobRepository jobRepository;
     private final PlatformTransactionManager platformTransactionManager;
 
-    @Bean
+    @Bean(name = "jobEx")
     public Job testJob() {
         return new JobBuilder("testJob", jobRepository)
             .start(testStep())
             .build();
     }
 
-    @Bean
+    @Bean(name = "testStep")
     public Step testStep() {
         return new StepBuilder("testStep", jobRepository)
             .tasklet((contribution, chunkContext) -> {
