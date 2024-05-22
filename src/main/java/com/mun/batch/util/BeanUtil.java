@@ -1,4 +1,4 @@
-package com.mun.batch.job;
+package com.mun.batch.util;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;

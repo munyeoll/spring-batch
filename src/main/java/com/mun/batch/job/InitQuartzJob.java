@@ -1,5 +1,6 @@
 package com.mun.batch.job;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.quartz.CronScheduleBuilder;
@@ -7,16 +8,30 @@ import org.quartz.Job;
 import org.quartz.JobBuilder;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.Configuration;
 
-public abstract class QuartzJobRunner implements ApplicationRunner {
-    
-    @Override
-    public void run(ApplicationArguments args) throws Exception {
-        doRun(args);
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+@Configuration
+public class InitQuartzJob {
+
+    private final Scheduler scheduler;
+
+    @PostConstruct
+    public void initQuartz() {
+        JobDetail jobDetail = buildJobDetail(TestScheduleJob.class, "testJob", "batch", new HashMap<String, Object>());
+        Trigger trigger = buildJobTrigger("0/1 * * * * ?");
+        try{
+            scheduler.scheduleJob(jobDetail, trigger);
+        } catch (SchedulerException e) {
+            e.printStackTrace();
+        }
     }
 
     public Trigger buildJobTrigger(String cronExp) {
@@ -32,6 +47,4 @@ public abstract class QuartzJobRunner implements ApplicationRunner {
             .usingJobData(jobDataMap)
             .build();
     }
-
-    protected abstract void doRun(ApplicationArguments args);
 }
