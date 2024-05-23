@@ -1,6 +1,7 @@
 package com.mun.batch.job;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.quartz.CronScheduleBuilder;
@@ -14,23 +15,43 @@ import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.springframework.context.annotation.Configuration;
 
+import com.mun.batch.domain.entity.BatchMaster;
+import com.mun.batch.domain.entity.BatchMasterRepository;
+
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 @Configuration
 public class InitQuartzJob {
 
     private final Scheduler scheduler;
+    private final BatchMasterRepository batchMasterRepository;
 
     @PostConstruct
     public void initQuartz() {
-        JobDetail jobDetail = buildJobDetail(TestScheduleJob.class, "testJob", "batch", new HashMap<String, Object>());
-        Trigger trigger = buildJobTrigger("0/1 * * * * ?");
-        try{
-            scheduler.scheduleJob(jobDetail, trigger);
-        } catch (SchedulerException e) {
-            e.printStackTrace();
+        List<BatchMaster> batchMasters = batchMasterRepository.findAll();
+        for (BatchMaster batchMaster : batchMasters) {
+            try{
+                String batchNo = batchMaster.getBatchNo();
+                String jobClassPath = batchMaster.getJobClassPath();
+                String cronExp = batchMaster.getCronExp();
+
+                log.info(">>>> Init quartz job: {}", jobClassPath);
+
+                Class<? extends Job> jobClass = (Class<? extends Job>) Class.forName(jobClassPath).asSubclass(Job.class);
+
+                JobDetail jobDetail = buildJobDetail(jobClass, batchNo, "batch", new HashMap<String, Object>());
+                Trigger trigger = buildJobTrigger(cronExp);
+
+                scheduler.scheduleJob(jobDetail, trigger);
+            } catch (SchedulerException se) {
+                log.error("Error scheduling job", se);
+            } catch (ClassNotFoundException ce) {
+                log.error("Error loading job class", ce);
+            }
         }
     }
 

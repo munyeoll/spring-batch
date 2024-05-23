@@ -22,12 +22,14 @@ class BatchMasterTest {
     void testBatchMasterCreation() {
         String batchNo = "BATCH001";
         String batchName = "Daily Job";
-        String cronString = "0 0 12 * * ?";
-        
+        String cronExp = "0 0 12 * * ?";
+        String jobClassPath = "com.mun.batch.job.TestScheduleJob";
+
         BatchMaster batchMaster = BatchMaster.builder()
                                              .batchNo(batchNo)
                                              .batchName(batchName)
-                                             .cronString(cronString)
+                                             .cronExp(cronExp)
+                                             .jobClassPath(jobClassPath)
                                              .build();
 
         batchMasterRepository.save(batchMaster);
@@ -38,7 +40,7 @@ class BatchMasterTest {
         assertNotNull(saveBatchMaster);
         assertEquals(batchNo, saveBatchMaster.getBatchNo());
         assertEquals(batchName, saveBatchMaster.getBatchName());
-        assertEquals(cronString, saveBatchMaster.getCronString());
+        assertEquals(cronExp, saveBatchMaster.getCronExp());
 
         String jobId = "JOB001";
         String logType = "INFO";

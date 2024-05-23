@@ -2,6 +2,7 @@ package com.mun.batch.job;
 
 import java.util.Date;
 
+import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.batch.core.Job;
@@ -19,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
+@DisallowConcurrentExecution
 @Component
 public class TestScheduleJob extends QuartzJobBean {
 
@@ -28,8 +30,11 @@ public class TestScheduleJob extends QuartzJobBean {
     @SneakyThrows
     @Override
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
-        log.info("TestScheduleJob run");
-        
+        for (int i = 1; i <= 10; i++) {
+            log.info("TestScheduleJob run " + i);
+            Thread.sleep(1000);
+        }
+
         Job jobEx = (Job) beanUtil.getBeanByName("jobEx");
 
         JobParameters jobParameters = new JobParametersBuilder()
