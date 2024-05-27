@@ -38,6 +38,9 @@ public class BatchMaster {
     private String jobClassPath;
 
     @Column(nullable = false)
+    private String jobBeanName;
+
+    @Column(nullable = false)
     private LocalDateTime createdDate;
 
     @Column(nullable = false)
@@ -50,11 +53,12 @@ public class BatchMaster {
     private List<BatchParam> batchParams;
 
     @Builder
-    public BatchMaster(String batchNo, String batchName, String cronExp, String jobClassPath) {
+    public BatchMaster(String batchNo, String batchName, String cronExp, String jobClassPath, String jobBeanName) {
         this.batchNo = batchNo;
         this.batchName = batchName;
         this.cronExp = cronExp;
         this.jobClassPath = jobClassPath;
+        this.jobBeanName = jobBeanName;
         this.createdDate = LocalDateTime.now();
         this.modifiedDate = LocalDateTime.now();
     }

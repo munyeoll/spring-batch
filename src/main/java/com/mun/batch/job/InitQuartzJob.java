@@ -17,10 +17,8 @@ import org.springframework.context.annotation.Configuration;
 
 import com.mun.batch.domain.entity.BatchMaster;
 import com.mun.batch.domain.entity.BatchMasterRepository;
-import com.mun.batch.domain.entity.BatchParam;
 
 import jakarta.annotation.PostConstruct;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -41,11 +39,13 @@ public class InitQuartzJob {
                 Long batchId = batchMaster.getId();
                 String batchNo = batchMaster.getBatchNo();
                 String jobClassPath = batchMaster.getJobClassPath();
+                String jobBeanName = batchMaster.getJobBeanName();
                 String cronExp = batchMaster.getCronExp();
 
                 // BatchParam info
                 Map<String, Object> params = new HashMap<>();
                 params.put("batchId", batchId);
+                params.put("jobBeanName", jobBeanName);
 
                 Class<? extends Job> jobClass = (Class<? extends Job>) Class.forName(jobClassPath).asSubclass(Job.class);
 

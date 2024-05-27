@@ -29,15 +29,19 @@ public class TestScheduleJob extends QuartzJobBean {
     @SneakyThrows
     @Override
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
-        Job jobEx = (Job) beanUtil.getBeanByName("jobEx");
-
         // JobDataMap 조회
         Map<String, Object> jobDataMap = context.getMergedJobDataMap();
+
+        String batchId = jobDataMap.get("batchId").toString();
+        String jobBeanName = jobDataMap.get("jobBeanName").toString();
+
+        // JobBen 가져오기
+        Job jobEx = (Job) beanUtil.getBeanByName(jobBeanName);
         
         // Job 에 전달할 파라미터 생성
         JobParameters jobParameters = new JobParametersBuilder()
             .addLong("jobId", new Date().getTime())
-            .addString("batchId", jobDataMap.get("batchId").toString())
+            .addString("batchId", batchId)
             .toJobParameters();
             
         jobLauncher.run(jobEx, jobParameters);
