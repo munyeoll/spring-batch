@@ -46,6 +46,9 @@ public class BatchMaster {
     @OneToMany(mappedBy = "batchMaster", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<BatchLog> batchLogs;
 
+    @OneToMany(mappedBy = "batchMaster", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<BatchParam> batchParams;
+
     @Builder
     public BatchMaster(String batchNo, String batchName, String cronExp, String jobClassPath) {
         this.batchNo = batchNo;

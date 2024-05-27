@@ -10,6 +10,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import com.mun.batch.domain.entity.BatchMaster;
+import com.mun.batch.domain.entity.BatchMasterRepository;
+
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,6 +24,7 @@ public class BatchTestJob01 {
     
     private final JobRepository jobRepository;
     private final PlatformTransactionManager platformTransactionManager;
+    private final BatchMasterRepository batchMasterRepository;
 
     @Bean(name = "jobEx")
     public Job testJob() {
@@ -28,11 +33,22 @@ public class BatchTestJob01 {
             .build();
     }
 
+    @Transactional
     @Bean(name = "testStep")
     public Step testStep() {
         return new StepBuilder("testStep", jobRepository)
             .tasklet((contribution, chunkContext) -> {
-                log.info("################ Execute test step #################");
+                Long batchId = Long.parseLong(chunkContext.getStepContext().getJobParameters().get("batchId").toString());
+                log.info("######## batchId: {}", batchId);
+
+                BatchMaster batchMaster = batchMasterRepository.findById(batchId).orElseThrow(
+                    () -> new IllegalArgumentException("batchId not found")
+                );
+                
+                batchMaster.getBatchParams().stream().forEach(batchParam -> {
+                    log.info("######## batchParam name: {}, value: {}", batchParam.getParamName(), batchParam.getParamValue());
+                });
+
                 return RepeatStatus.FINISHED;
             }, platformTransactionManager).build();
     }

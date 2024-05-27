@@ -17,8 +17,10 @@ import org.springframework.context.annotation.Configuration;
 
 import com.mun.batch.domain.entity.BatchMaster;
 import com.mun.batch.domain.entity.BatchMasterRepository;
+import com.mun.batch.domain.entity.BatchParam;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,22 +33,29 @@ public class InitQuartzJob {
     private final BatchMasterRepository batchMasterRepository;
 
     @PostConstruct
-    public void initQuartz() {
+    public void initQuartz() throws ClassNotFoundException, SchedulerException {
         List<BatchMaster> batchMasters = batchMasterRepository.findAll();
         for (BatchMaster batchMaster : batchMasters) {
             try{
+                // BatchMaster info
+                Long batchId = batchMaster.getId();
                 String batchNo = batchMaster.getBatchNo();
                 String jobClassPath = batchMaster.getJobClassPath();
                 String cronExp = batchMaster.getCronExp();
 
-                log.info(">>>> Init quartz job: {}", jobClassPath);
+                // BatchParam info
+                Map<String, Object> params = new HashMap<>();
+                params.put("batchId", batchId);
 
                 Class<? extends Job> jobClass = (Class<? extends Job>) Class.forName(jobClassPath).asSubclass(Job.class);
 
-                JobDetail jobDetail = buildJobDetail(jobClass, batchNo, "batch", new HashMap<String, Object>());
+                JobDetail jobDetail = buildJobDetail(jobClass, batchNo, "batch", params);
                 Trigger trigger = buildJobTrigger(cronExp);
 
+                // Schedule 등록
                 scheduler.scheduleJob(jobDetail, trigger);
+
+                log.info(">>>> Init quartz job: {}", jobClassPath);
             } catch (SchedulerException se) {
                 log.error("Error scheduling job", se);
             } catch (ClassNotFoundException ce) {

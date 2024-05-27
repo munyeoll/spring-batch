@@ -1,6 +1,7 @@
 package com.mun.batch.job;
 
 import java.util.Date;
+import java.util.Map;
 
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
@@ -16,11 +17,9 @@ import com.mun.batch.util.BeanUtil;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RequiredArgsConstructor
-@DisallowConcurrentExecution
+@DisallowConcurrentExecution // 중복 실행 방지
 @Component
 public class TestScheduleJob extends QuartzJobBean {
 
@@ -30,18 +29,17 @@ public class TestScheduleJob extends QuartzJobBean {
     @SneakyThrows
     @Override
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
-        for (int i = 1; i <= 10; i++) {
-            log.info("TestScheduleJob run " + i);
-            Thread.sleep(1000);
-        }
-
         Job jobEx = (Job) beanUtil.getBeanByName("jobEx");
 
+        // JobDataMap 조회
+        Map<String, Object> jobDataMap = context.getMergedJobDataMap();
+        
+        // Job 에 전달할 파라미터 생성
         JobParameters jobParameters = new JobParametersBuilder()
-            .addLong("id", new Date().getTime())
+            .addLong("jobId", new Date().getTime())
+            .addString("batchId", jobDataMap.get("batchId").toString())
             .toJobParameters();
             
         jobLauncher.run(jobEx, jobParameters);
     }
-
 }
