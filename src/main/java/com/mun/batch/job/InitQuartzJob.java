@@ -31,7 +31,7 @@ public class InitQuartzJob {
     private final BatchMasterRepository batchMasterRepository;
 
     @PostConstruct
-    public void initQuartz() throws ClassNotFoundException, SchedulerException {
+    public void initQuartz() {
         List<BatchMaster> batchMasters = batchMasterRepository.findAll();
         for (BatchMaster batchMaster : batchMasters) {
             try{
@@ -47,7 +47,7 @@ public class InitQuartzJob {
                 params.put("batchId", batchId);
                 params.put("jobBeanName", jobBeanName);
 
-                Class<? extends Job> jobClass = (Class<? extends Job>) Class.forName(jobClassPath).asSubclass(Job.class);
+                Class<? extends Job> jobClass = Class.forName(jobClassPath).asSubclass(Job.class);
 
                 JobDetail jobDetail = buildJobDetail(jobClass, batchNo, "batch", params);
                 Trigger trigger = buildJobTrigger(cronExp);
