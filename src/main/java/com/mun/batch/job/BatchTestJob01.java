@@ -49,6 +49,10 @@ public class BatchTestJob01 {
                     log.info("######## batchParam name: {}, value: {}", batchParam.getParamName(), batchParam.getParamValue());
                 });
 
+                if(batchId == 1) {
+                    throw new Exception("배치 테스트 오류 발생 !");
+                }
+
                 return RepeatStatus.FINISHED;
             }, platformTransactionManager).build();
     }

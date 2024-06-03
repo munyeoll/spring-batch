@@ -30,7 +30,7 @@ public class BatchLog {
     @Column(nullable = false, length = 50)
     private String logType;
 
-    @Column(nullable = false, length = 1000)
+    @Column(length = 1000)
     private String logMsg;
 
     @Column(nullable = false)
