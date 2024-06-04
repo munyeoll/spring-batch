@@ -23,7 +23,7 @@ class BatchMasterTest {
         String batchNo = "BATCH001";
         String batchName = "Daily Job";
         String cronExp = "0 0 12 * * ?";
-        String jobClassPath = "com.mun.batch.job.TestScheduleJob";
+        String jobClassPath = "com.mun.batch.job.schedule.TestScheduleJob";
 
         BatchMaster batchMaster = BatchMaster.builder()
                                              .batchNo(batchNo)

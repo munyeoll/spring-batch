@@ -1,4 +1,4 @@
-package com.mun.batch.job;
+package com.mun.batch.job.core;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -48,10 +48,6 @@ public class BatchTestJob01 {
                 batchMaster.getBatchParams().stream().forEach(batchParam -> {
                     log.info("######## batchParam name: {}, value: {}", batchParam.getParamName(), batchParam.getParamValue());
                 });
-
-                if(batchId == 1) {
-                    throw new Exception("배치 테스트 오류 발생 !");
-                }
 
                 return RepeatStatus.FINISHED;
             }, platformTransactionManager).build();
