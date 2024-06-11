@@ -46,4 +46,24 @@
         </tbody>
     </table>
 </body>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(function(){
+        getBatchList();
+    });
+
+    function getBatchList() {
+        $.ajax({
+            url: '/batch',
+            type: 'GET',
+            success: function(response) {
+                console.log('Response:', response);
+            },
+            error: function(xhr, status, error) {
+                console.error('Request failed. Status:', status, 'Error:', error);
+            }
+        });
+    }
+</script>
 </html>

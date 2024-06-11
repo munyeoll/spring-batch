@@ -32,7 +32,7 @@ public class InitQuartzJob {
 
     @PostConstruct
     public void initQuartz() {
-        List<BatchMaster> batchMasters = batchMasterRepository.findAll();
+        List<BatchMaster> batchMasters = batchMasterRepository.findByUseYnOrderByBatchNo("Y");
         for (BatchMaster batchMaster : batchMasters) {
             try{
                 // BatchMaster info
